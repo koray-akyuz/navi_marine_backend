@@ -17,9 +17,10 @@ async def validate_location(coord: CoordinateCheck, db: AsyncSession = Depends(g
         SELECT EXISTS (
             SELECT 1 
             FROM sea_areas 
-            WHERE ST_Intersects(
+            WHERE ST_DWithin(
                 geom, 
-                ST_SetSRID(ST_MakePoint(:lon, :lat), 4326)
+                ST_SetSRID(ST_MakePoint(:lon, :lat), 4326),
+                0.005
             )
         )
     """)
