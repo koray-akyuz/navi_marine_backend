@@ -19,15 +19,28 @@ async def create_fish_report(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    # 1. Lokasyon Doğrulaması (Buffer kullanarak)
+    # 1. Lokasyon Doğrulaması (Kara Maskesi Mantığı)
     check_query = text("""
-        SELECT EXISTS (
-            SELECT 1 FROM sea_areas 
-            WHERE ST_DWithin(geom, ST_SetSRID(ST_MakePoint(:lon, :lat), 4326), 0.02)
+        SELECT NOT EXISTS (
+            SELECT 1 FROM land_areas 
+            WHERE ST_DWithin(geom, ST_SetSRID(ST_MakePoint(:lon, :lat), 4326), 0.001)
         )
     """)
-    res = await db.execute(check_query, {"lat": report_in.latitude, "lon": report_in.longitude})
-    if not res.scalar():
+    try:
+        res = await db.execute(check_query, {"lat": report_in.latitude, "lon": report_in.longitude})
+        is_in_sea = res.scalar()
+    except Exception:
+        # land_areas yoksa fallback
+        fallback_query = text("""
+            SELECT EXISTS (
+                SELECT 1 FROM sea_areas 
+                WHERE ST_DWithin(geom, ST_SetSRID(ST_MakePoint(:lon, :lat), 4326), 0.02)
+            )
+        """)
+        res = await db.execute(fallback_query, {"lat": report_in.latitude, "lon": report_in.longitude})
+        is_in_sea = res.scalar()
+
+    if not is_in_sea:
         raise HTTPException(status_code=400, detail="Kaptan, karada balık raporlayamazsın!")
 
     # 2. Rapor anındaki hava durumunu çek (Historical Weather)
