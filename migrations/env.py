@@ -18,6 +18,7 @@ from models.spatial import SeaArea
 from models.reports import FishReport
 from models.users import User
 from models.fish import FishType
+from models.tracks import Track
 
 # Alembic Config objesi
 config = context.config
