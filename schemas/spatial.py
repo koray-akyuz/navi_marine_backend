@@ -10,3 +10,10 @@ class MapBounds(BaseModel):
     max_lat: float
     min_lon: float
     max_lon: float
+
+
+class RouteCheck(BaseModel):
+    lat1: float
+    lon1: float
+    lat2: float
+    lon2: float
