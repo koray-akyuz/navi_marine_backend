@@ -23,7 +23,7 @@ async def create_fish_report(
     check_query = text("""
         SELECT EXISTS (
             SELECT 1 FROM sea_areas 
-            WHERE ST_DWithin(geom, ST_SetSRID(ST_MakePoint(:lon, :lat), 4326), 0.005)
+            WHERE ST_DWithin(geom, ST_SetSRID(ST_MakePoint(:lon, :lat), 4326), 0.02)
         )
     """)
     res = await db.execute(check_query, {"lat": report_in.latitude, "lon": report_in.longitude})

@@ -20,7 +20,7 @@ async def validate_location(coord: CoordinateCheck, db: AsyncSession = Depends(g
             WHERE ST_DWithin(
                 geom, 
                 ST_SetSRID(ST_MakePoint(:lon, :lat), 4326),
-                0.005
+                0.02
             )
         )
     """)
