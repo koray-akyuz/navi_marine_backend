@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, update
+from sqlalchemy.orm import joinedload
 from typing import List
 from datetime import datetime
 
@@ -32,7 +33,7 @@ async def create_sos(
     await db.refresh(new_sos)
     
     # User bilgisini preload et
-    stmt = select(SOSAlarm).where(SOSAlarm.id == new_sos.id)
+    stmt = select(SOSAlarm).options(joinedload(SOSAlarm.user)).where(SOSAlarm.id == new_sos.id)
     result = await db.execute(stmt)
     return result.scalar_one()
 
@@ -41,7 +42,7 @@ async def get_active_sos(db: AsyncSession = Depends(get_db)):
     """
     Tüm aktif SOS alarmlarını getirir.
     """
-    stmt = select(SOSAlarm).where(SOSAlarm.is_active == True).order_by(SOSAlarm.created_at.desc())
+    stmt = select(SOSAlarm).options(joinedload(SOSAlarm.user)).where(SOSAlarm.is_active == True).order_by(SOSAlarm.created_at.desc())
     result = await db.execute(stmt)
     return result.scalars().all()
 

@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, delete, func
+from sqlalchemy.orm import joinedload
 from typing import List
 
 from database import get_db
@@ -52,7 +53,7 @@ async def get_comments(
     """
     Bir rapora yapılan yorumları getirir.
     """
-    stmt = select(FishReportComment).where(
+    stmt = select(FishReportComment).options(joinedload(FishReportComment.user)).where(
         FishReportComment.report_id == report_id
     ).order_by(FishReportComment.created_at.asc())
     
@@ -83,7 +84,7 @@ async def create_comment(
     await db.refresh(new_comment)
     
     # User bilgisini preload et
-    stmt = select(FishReportComment).where(FishReportComment.id == new_comment.id)
+    stmt = select(FishReportComment).options(joinedload(FishReportComment.user)).where(FishReportComment.id == new_comment.id)
     result = await db.execute(stmt)
     return result.scalar_one()
 
