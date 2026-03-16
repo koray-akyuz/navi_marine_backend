@@ -6,8 +6,8 @@ def run():
     db_conn = "PG:host=ls-a5ad1b260b195f323cd3b9091ae79e32877778de.cfyc6yasm15y.eu-central-1.rds.amazonaws.com user=dbmasteruser password='ec2;&=6KtFJi9#J{RE1#OC52w5STi8it' dbname=navi_marine"
     
     print("🌍 Türkiye yüksek çözünürlüklü kara sınırı indiriliyor...")
-    # GitHub'da güvenilir bir kaynaktan Türkiye sınırını çekelim
-    url = "https://raw.githubusercontent.com/alpers/turkey-geojson/master/turkey.json"
+    # Yeni ve sağlam URL (geoBoundaries projesinden)
+    url = "https://github.com/wmgeolab/geoBoundaries/raw/main/releaseData/gbOpen/TUR/ADM0/geoBoundaries-TUR-ADM0.geojson"
     
     try:
         # ogr2ogr ile GeoJSON'ı direkt PostGIS'e aktaralım
@@ -28,8 +28,19 @@ def run():
         
         # SQL ile ana tabloya taşıma
         print("🧹 Tablo optimize ediliyor...")
-        psql_conn = "postgresql://dbmasteruser:ec2;&=6KtFJi9#J%7BRE1#OC52w5STi8it@ls-a5ad1b260b195f323cd3b9091ae79e32877778de.cfyc6yasm15y.eu-central-1.rds.amazonaws.com:5432/navi_marine"
-        subprocess.run(["psql", psql_conn, "-c", "DROP TABLE IF EXISTS land_areas; ALTER TABLE land_areas_temp RENAME TO land_areas; CREATE INDEX idx_land_areas_geom ON land_areas USING GIST(geom);"], check=True)
+        # PGPASSWORD kullanarak şifreyi geçelim ki psql sormasın
+        psql_env = os.environ.copy()
+        psql_env["PGPASSWORD"] = "ec2;&=6KtFJi9#J{RE1#OC52w5STi8it"
+        
+        psql_cmd = [
+            "psql",
+            "-h", "ls-a5ad1b260b195f323cd3b9091ae79e32877778de.cfyc6yasm15y.eu-central-1.rds.amazonaws.com",
+            "-U", "dbmasteruser",
+            "-d", "navi_marine",
+            "-c", "DROP TABLE IF EXISTS land_areas; ALTER TABLE land_areas_temp RENAME TO land_areas; CREATE INDEX idx_land_areas_geom ON land_areas USING GIST(geom);"
+        ]
+        
+        subprocess.run(psql_cmd, env=psql_env, check=True)
         
         print("✅ İşlem tamamlandı! Artık Ankara'ya rota çizemeyeceksin kaptan.")
         
