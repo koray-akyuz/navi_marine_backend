@@ -1,10 +1,11 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, AliasChoice
 from typing import List, Optional
 from datetime import datetime
 
 class TrackCreate(BaseModel):
     name: Optional[str] = None
-    points: List[dict] # [{"latitude": 1.2, "longitude": 3.4}, ...]
+    # Hem 'points' (API request) hem 'points_json' (DB response) ismini kabul et
+    points: List[dict] = Field(..., validation_alias=AliasChoice('points', 'points_json'), serialization_alias='points')
     distance: Optional[float] = None
     duration: Optional[int] = None
 
@@ -14,3 +15,4 @@ class TrackResponse(TrackCreate):
 
     class Config:
         from_attributes = True
+        populate_by_name = True
