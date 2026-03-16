@@ -10,6 +10,8 @@ from api.v1.deps import get_current_user
 from models.users import User
 from sqlalchemy.future import select
 from sqlalchemy.orm import joinedload
+from models.social import FishReportLike, FishReportComment
+from sqlalchemy import func
 
 router = APIRouter()
 
@@ -96,7 +98,9 @@ async def get_nearby_reports(bounds: MapBounds, db: AsyncSession = Depends(get_d
         query = text("""
             SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
                    r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
-                   u.nickname as reporter_nickname
+                   u.nickname as reporter_nickname,
+                   (SELECT COUNT(*) FROM fish_report_likes WHERE report_id = r.id) as likes_count,
+                   (SELECT COUNT(*) FROM fish_report_comments WHERE report_id = r.id) as comments_count
             FROM fish_reports r
             LEFT JOIN users u ON r.user_id = u.id
             WHERE r.geom && ST_MakeEnvelope(:min_lon, :min_lat, :max_lon, :max_lat, 4326)
@@ -128,5 +132,12 @@ async def get_report_detail(report_id: int, db: AsyncSession = Depends(get_db)):
     # reporter_nickname field'ını doldur (ResponseSchema için)
     if report.reporter:
         report.reporter_nickname = report.reporter.nickname
+    
+    # Sayıları manuel çek (Joinedload ile count karmaşık olabilir)
+    likes_q = select(func.count(FishReportLike.id)).where(FishReportLike.report_id == report_id)
+    comments_q = select(func.count(FishReportComment.id)).where(FishReportComment.report_id == report_id)
+    
+    report.likes_count = (await db.execute(likes_q)).scalar()
+    report.comments_count = (await db.execute(comments_q)).scalar()
         
     return report

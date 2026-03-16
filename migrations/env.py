@@ -19,6 +19,7 @@ from models.reports import FishReport
 from models.users import User
 from models.fish import FishType
 from models.tracks import Track
+from models.social import SOSAlarm, FishReportLike, FishReportComment
 
 # Alembic Config objesi
 config = context.config

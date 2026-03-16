@@ -8,6 +8,8 @@ from api.v1 import weather as api_v1_weather_router
 from api.v1 import auth as api_v1_auth_router
 from api.v1 import fish as api_v1_fish_router
 from api.v1 import tracks as api_v1_tracks_router
+from api.v1 import social as api_v1_social_router
+from api.v1 import sos as api_v1_sos_router
 
 app = FastAPI(title="Vira Bismillah API")
 
@@ -26,6 +28,8 @@ app.include_router(api_v1_weather_router.router, prefix="/api/v1/weather", tags=
 app.include_router(api_v1_auth_router.router, prefix="/api/v1/auth", tags=["auth"])
 app.include_router(api_v1_fish_router.router, prefix="/api/v1/fish", tags=["fish"])
 app.include_router(api_v1_tracks_router.router, prefix="/api/v1/tracks", tags=["tracks"])
+app.include_router(api_v1_social_router.router, prefix="/api/v1/social", tags=["social"])
+app.include_router(api_v1_sos_router.router, prefix="/api/v1/sos", tags=["sos"])
 
 @app.get("/")
 async def root():
