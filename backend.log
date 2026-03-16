@@ -1,0 +1,1105 @@
+INFO:     Started server process [54337]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-03-14 16:22:14,118 INFO sqlalchemy.engine.Engine select pg_catalog.version()
+2026-03-14 16:22:14,118 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-14 16:22:14,137 INFO sqlalchemy.engine.Engine select current_schema()
+2026-03-14 16:22:14,137 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-14 16:22:14,141 INFO sqlalchemy.engine.Engine show standard_conforming_strings
+2026-03-14 16:22:14,141 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-14 16:22:14,143 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 16:22:14,147 INFO sqlalchemy.engine.Engine SELECT users.name, users.surname, users.email, users.nickname, users.password, users.city, users.district, users.id, users.created_at, users.updated_at 
+FROM users 
+WHERE users.nickname = $1::VARCHAR
+2026-03-14 16:22:14,147 INFO sqlalchemy.engine.Engine [generated in 0.00011s] ('deneme_kaptan',)
+2026-03-14 16:22:14,171 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:57932 - "POST /api/v1/auth/login HTTP/1.1" 401 Unauthorized
+2026-03-14 16:22:33,304 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 16:22:33,304 INFO sqlalchemy.engine.Engine SELECT users.name, users.surname, users.email, users.nickname, users.password, users.city, users.district, users.id, users.created_at, users.updated_at 
+FROM users 
+WHERE users.nickname = $1::VARCHAR
+2026-03-14 16:22:33,304 INFO sqlalchemy.engine.Engine [cached since 19.16s ago] ('deneme_kaptan',)
+INFO:     127.0.0.1:57937 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+2026-03-14 16:22:33,314 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-03-14 16:22:33,407 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 16:22:33,408 INFO sqlalchemy.engine.Engine SELECT fish_types.slug, fish_types.name, fish_types.icon_url, fish_types.color, fish_types.description, fish_types.id, fish_types.created_at, fish_types.updated_at 
+FROM fish_types ORDER BY fish_types.name
+2026-03-14 16:22:33,408 INFO sqlalchemy.engine.Engine [generated in 0.00012s] ()
+INFO:     127.0.0.1:57937 - "GET /api/v1/fish/ HTTP/1.1" 200 OK
+2026-03-14 16:22:33,441 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-03-14 16:22:33,560 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 16:22:33,561 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 16:22:33,561 INFO sqlalchemy.engine.Engine [generated in 0.00029s] (29.777659000000043, 40.715438256118844, 29.787659000000026, 40.72957374388115)
+INFO:     127.0.0.1:57937 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 16:22:33,649 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:57937 - "GET /api/v1/weather/weather?lat=40.722505999999996&lon=29.782659000000034 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57937 - "GET /api/v1/weather/wind-grid?min_lat=40.715438256118844&max_lat=40.72957374388115&min_lon=29.777659000000043&max_lon=29.787659000000026&steps=5 HTTP/1.1" 200 OK
+2026-03-14 16:22:38,362 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 16:22:38,363 INFO sqlalchemy.engine.Engine SELECT users.name, users.surname, users.email, users.nickname, users.password, users.city, users.district, users.id, users.created_at, users.updated_at 
+FROM users 
+WHERE users.id = $1::INTEGER
+2026-03-14 16:22:38,364 INFO sqlalchemy.engine.Engine [generated in 0.00026s] (2,)
+INFO:     127.0.0.1:57937 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+2026-03-14 16:22:38,379 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-03-14 16:22:38,453 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 16:22:38,453 INFO sqlalchemy.engine.Engine SELECT users.name, users.surname, users.email, users.nickname, users.password, users.city, users.district, users.id, users.created_at, users.updated_at 
+FROM users 
+WHERE users.id = $1::INTEGER
+2026-03-14 16:22:38,453 INFO sqlalchemy.engine.Engine [cached since 0.08973s ago] (2,)
+2026-03-14 16:22:38,472 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 16:22:38,472 INFO sqlalchemy.engine.Engine SELECT fish_types.slug, fish_types.name, fish_types.icon_url, fish_types.color, fish_types.description, fish_types.id, fish_types.created_at, fish_types.updated_at 
+FROM fish_types ORDER BY fish_types.name
+2026-03-14 16:22:38,472 INFO sqlalchemy.engine.Engine [cached since 5.064s ago] ()
+2026-03-14 16:22:38,490 INFO sqlalchemy.engine.Engine SELECT fish_reports.user_id, fish_reports.fish_type_id, fish_reports.note, ST_AsEWKB(fish_reports.geom) AS geom, fish_reports.latitude, fish_reports.longitude, fish_reports.wind_speed, fish_reports.wind_deg, fish_reports.wind_name, fish_reports.temperature, fish_reports.id, fish_reports.created_at, fish_reports.updated_at 
+FROM fish_reports 
+WHERE fish_reports.user_id = $1::INTEGER ORDER BY fish_reports.created_at DESC
+2026-03-14 16:22:38,490 INFO sqlalchemy.engine.Engine [generated in 0.00013s] (2,)
+INFO:     127.0.0.1:57945 - "GET /api/v1/fish/ HTTP/1.1" 200 OK
+2026-03-14 16:22:38,504 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:57944 - "GET /api/v1/reports/me HTTP/1.1" 200 OK
+2026-03-14 16:22:38,552 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-03-14 16:23:39,269 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 16:23:39,269 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 16:23:39,269 INFO sqlalchemy.engine.Engine [cached since 65.71s ago] (29.777659000000043, 40.71811259390097, 29.787659000000026, 40.73224751374988)
+INFO:     127.0.0.1:57959 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 16:23:39,279 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:57959 - "GET /api/v1/weather/weather?lat=40.725180053825426&lon=29.782659000000034 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57959 - "GET /api/v1/weather/wind-grid?min_lat=40.71811259390097&max_lat=40.73224751374988&min_lon=29.777659000000043&max_lon=29.787659000000026&steps=5 HTTP/1.1" 200 OK
+2026-03-14 16:23:42,123 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 16:23:42,123 INFO sqlalchemy.engine.Engine 
+        SELECT EXISTS (
+            SELECT 1 
+            FROM sea_areas 
+            WHERE ST_Intersects(
+                geom, 
+                ST_SetSRID(ST_MakePoint($1, $2), 4326)
+            )
+        )
+    
+2026-03-14 16:23:42,124 INFO sqlalchemy.engine.Engine [generated in 0.00019s] (29.78228156123398, 40.72887919929313)
+INFO:     127.0.0.1:57959 - "POST /api/v1/spatial/validate-location HTTP/1.1" 200 OK
+2026-03-14 16:23:42,435 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-03-14 16:23:44,421 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 16:23:44,421 INFO sqlalchemy.engine.Engine SELECT users.name, users.surname, users.email, users.nickname, users.password, users.city, users.district, users.id, users.created_at, users.updated_at 
+FROM users 
+WHERE users.id = $1::INTEGER
+2026-03-14 16:23:44,421 INFO sqlalchemy.engine.Engine [cached since 66.06s ago] (2,)
+2026-03-14 16:23:44,430 INFO sqlalchemy.engine.Engine 
+        SELECT EXISTS (
+            SELECT 1 FROM sea_areas 
+            WHERE ST_DWithin(geom, ST_SetSRID(ST_MakePoint($1, $2), 4326), 0.002)
+        )
+    
+2026-03-14 16:23:44,430 INFO sqlalchemy.engine.Engine [generated in 0.00180s] (29.78228156123398, 40.72887919929313)
+2026-03-14 16:23:44,901 INFO sqlalchemy.engine.Engine INSERT INTO fish_reports (user_id, fish_type_id, note, geom, latitude, longitude, wind_speed, wind_deg, wind_name, temperature, created_at, updated_at) VALUES ($1::INTEGER, $2::VARCHAR, $3::VARCHAR, ST_GeomFromEWKT($4), $5::FLOAT, $6::FLOAT, $7::FLOAT, $8::FLOAT, $9::VARCHAR, $10::FLOAT, now(), now()) RETURNING fish_reports.id, fish_reports.created_at, fish_reports.updated_at
+2026-03-14 16:23:44,901 INFO sqlalchemy.engine.Engine [generated in 0.00058s] (2, 'palamut', None, 'SRID=4326;POINT(29.78228156123398 40.72887919929313)', 40.72887919929313, 29.78228156123398, 4.69, 56, 'Poyraz (KD)', 12.3)
+2026-03-14 16:23:44,957 INFO sqlalchemy.engine.Engine COMMIT
+2026-03-14 16:23:44,965 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 16:23:44,967 INFO sqlalchemy.engine.Engine SELECT fish_reports.user_id, fish_reports.fish_type_id, fish_reports.note, ST_AsEWKB(fish_reports.geom) AS geom, fish_reports.latitude, fish_reports.longitude, fish_reports.wind_speed, fish_reports.wind_deg, fish_reports.wind_name, fish_reports.temperature, fish_reports.id, fish_reports.created_at, fish_reports.updated_at 
+FROM fish_reports 
+WHERE fish_reports.id = $1::INTEGER
+2026-03-14 16:23:44,967 INFO sqlalchemy.engine.Engine [generated in 0.00019s] (1120,)
+INFO:     127.0.0.1:57959 - "POST /api/v1/reports/ HTTP/1.1" 200 OK
+2026-03-14 16:23:44,974 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-03-14 16:24:05,702 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 16:24:05,703 INFO sqlalchemy.engine.Engine SELECT users.name, users.surname, users.email, users.nickname, users.password, users.city, users.district, users.id, users.created_at, users.updated_at 
+FROM users 
+WHERE users.nickname = $1::VARCHAR
+2026-03-14 16:24:05,703 INFO sqlalchemy.engine.Engine [cached since 111.6s ago] ('deneme_kaptan',)
+INFO:     127.0.0.1:57979 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+2026-03-14 16:24:05,721 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-03-14 16:24:05,804 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 16:24:05,805 INFO sqlalchemy.engine.Engine SELECT fish_types.slug, fish_types.name, fish_types.icon_url, fish_types.color, fish_types.description, fish_types.id, fish_types.created_at, fish_types.updated_at 
+FROM fish_types ORDER BY fish_types.name
+2026-03-14 16:24:05,805 INFO sqlalchemy.engine.Engine [cached since 92.4s ago] ()
+INFO:     127.0.0.1:57979 - "GET /api/v1/fish/ HTTP/1.1" 200 OK
+2026-03-14 16:24:05,822 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-03-14 16:24:05,962 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 16:24:05,962 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 16:24:05,962 INFO sqlalchemy.engine.Engine [cached since 92.4s ago] (29.777659000000043, 40.715438256118844, 29.787659000000026, 40.72957374388115)
+INFO:     127.0.0.1:57979 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 16:24:05,968 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:57979 - "GET /api/v1/weather/weather?lat=40.722505999999996&lon=29.782659000000034 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57979 - "GET /api/v1/weather/wind-grid?min_lat=40.715438256118844&max_lat=40.72957374388115&min_lon=29.777659000000043&max_lon=29.787659000000026&steps=5 HTTP/1.1" 200 OK
+2026-03-14 16:24:32,421 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 16:24:32,422 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 16:24:32,422 INFO sqlalchemy.engine.Engine [cached since 118.9s ago] (29.776963495464507, 40.715804698203094, 29.78696349546449, 40.72994010815081)
+INFO:     127.0.0.1:57985 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 16:24:32,471 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:57985 - "GET /api/v1/weather/weather?lat=40.72287240317695&lon=29.7819634954645 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57985 - "GET /api/v1/weather/wind-grid?min_lat=40.715804698203094&max_lat=40.72994010815081&min_lon=29.776963495464507&max_lon=29.78696349546449&steps=5 HTTP/1.1" 200 OK
+2026-03-14 16:24:35,586 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 16:24:35,587 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 16:24:35,588 INFO sqlalchemy.engine.Engine [cached since 122s ago] (29.776598779733042, 40.71532896588582, 29.78659877973299, 40.729464476855966)
+INFO:     127.0.0.1:57985 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 16:24:35,633 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:57985 - "GET /api/v1/weather/weather?lat=40.72239672137089&lon=29.781598779733017 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57985 - "GET /api/v1/weather/wind-grid?min_lat=40.71532896588582&max_lat=40.729464476855966&min_lon=29.776598779733042&max_lon=29.78659877973299&steps=5 HTTP/1.1" 200 OK
+2026-03-14 16:24:39,052 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 16:24:39,053 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 16:24:39,053 INFO sqlalchemy.engine.Engine [cached since 125.5s ago] (29.775564004370313, 40.715013951944044, 29.785564004370297, 40.729149529807316)
+INFO:     127.0.0.1:57985 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 16:24:39,062 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:57985 - "GET /api/v1/weather/weather?lat=40.72208174087568&lon=29.780564004370305 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57985 - "GET /api/v1/weather/wind-grid?min_lat=40.715013951944044&max_lat=40.729149529807316&min_lon=29.775564004370313&max_lon=29.785564004370297&steps=5 HTTP/1.1" 200 OK
+2026-03-14 16:24:42,422 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 16:24:42,422 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 16:24:42,422 INFO sqlalchemy.engine.Engine [cached since 128.9s ago] (29.77787104436409, 40.715013951944044, 29.78787104436404, 40.729149529807316)
+INFO:     127.0.0.1:57985 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 16:24:42,430 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-03-14 16:24:43,297 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 16:24:43,297 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 16:24:43,298 INFO sqlalchemy.engine.Engine [cached since 129.7s ago] (29.78084814360067, 40.71557968975236, 29.790848143600662, 40.72971514748107)
+INFO:     127.0.0.1:57985 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 16:24:43,306 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:57985 - "GET /api/v1/weather/weather?lat=40.72208174087568&lon=29.782871044364065 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57995 - "GET /api/v1/weather/wind-grid?min_lat=40.715013951944044&max_lat=40.729149529807316&min_lon=29.77787104436409&max_lon=29.78787104436404&steps=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57985 - "GET /api/v1/weather/weather?lat=40.72264741861672&lon=29.785848143600667 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57985 - "GET /api/v1/weather/wind-grid?min_lat=40.71557968975236&max_lat=40.72971514748107&min_lon=29.78084814360067&max_lon=29.790848143600662&steps=5 HTTP/1.1" 200 OK
+2026-03-14 16:25:47,757 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 16:25:47,758 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 16:25:47,758 INFO sqlalchemy.engine.Engine [cached since 194.2s ago] (29.078360654906007, 40.92655219339584, 29.112091888121086, 40.97406936944497)
+INFO:     127.0.0.1:58008 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 16:25:47,766 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-03-14 16:25:48,679 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 16:25:48,679 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 16:25:48,679 INFO sqlalchemy.engine.Engine [cached since 195.1s ago] (29.091435441220383, 40.91647822362693, 29.125166674435462, 40.96400264621534)
+INFO:     127.0.0.1:58008 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 16:25:48,689 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:58008 - "GET /api/v1/weather/weather?lat=40.950310781420406&lon=29.095226271513546 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58008 - "GET /api/v1/weather/weather?lat=40.94024043492114&lon=29.108301057827923 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58013 - "GET /api/v1/weather/wind-grid?min_lat=40.92655219339584&max_lat=40.97406936944497&min_lon=29.078360654906007&max_lon=29.112091888121086&steps=5 HTTP/1.1" 200 OK
+2026-03-14 16:25:50,238 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 16:25:50,239 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 16:25:50,239 INFO sqlalchemy.engine.Engine [cached since 196.7s ago] (29.106340210969684, 40.905012456870715, 29.140071444184755, 40.9525451253782)
+INFO:     127.0.0.1:58008 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 16:25:50,253 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:58008 - "GET /api/v1/weather/wind-grid?min_lat=40.91647822362693&max_lat=40.96400264621534&min_lon=29.091435441220383&max_lon=29.125166674435462&steps=5 HTTP/1.1" 200 OK
+2026-03-14 16:25:51,301 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 16:25:51,301 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 16:25:51,302 INFO sqlalchemy.engine.Engine [cached since 197.7s ago] (29.108800674558452, 40.89487032450516, 29.14253190777349, 40.9424102854191)
+INFO:     127.0.0.1:58013 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 16:25:51,309 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:58008 - "GET /api/v1/weather/weather?lat=40.92877879112446&lon=29.12320582757722 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58008 - "GET /api/v1/weather/wind-grid?min_lat=40.905012456870715&max_lat=40.9525451253782&min_lon=29.106340210969684&max_lon=29.140071444184755&steps=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58013 - "GET /api/v1/weather/weather?lat=40.91864030496213&lon=29.12566629116597 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58008 - "GET /api/v1/weather/wind-grid?min_lat=40.89487032450516&max_lat=40.9424102854191&min_lon=29.108800674558452&max_lon=29.14253190777349&steps=5 HTTP/1.1" 200 OK
+2026-03-14 16:25:56,631 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 16:25:56,631 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 16:25:56,631 INFO sqlalchemy.engine.Engine [cached since 203.1s ago] (29.095897548464116, 40.90592063169062, 29.129628781679145, 40.95345264712874)
+INFO:     127.0.0.1:58008 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 16:25:56,639 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:58008 - "GET /api/v1/weather/weather?lat=40.92968663940968&lon=29.11276316507163 HTTP/1.1" 200 OK
+2026-03-14 16:25:58,153 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 16:25:58,154 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 16:25:58,154 INFO sqlalchemy.engine.Engine [cached since 204.6s ago] (29.091405773145958, 40.90907752265805, 29.12513700636103, 40.95660726788009)
+INFO:     127.0.0.1:58008 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 16:25:58,166 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-03-14 16:25:59,010 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 16:25:59,010 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 16:25:59,010 INFO sqlalchemy.engine.Engine [cached since 205.5s ago] (29.085397665448667, 40.90912076604255, 29.119128898663746, 40.95665048016596)
+INFO:     127.0.0.1:58026 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 16:25:59,017 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:58008 - "GET /api/v1/weather/wind-grid?min_lat=40.90592063169062&max_lat=40.95345264712874&min_lon=29.095897548464116&max_lon=29.129628781679145&steps=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58008 - "GET /api/v1/weather/weather?lat=40.93284239526907&lon=29.108271389753494 HTTP/1.1" 200 OK
+2026-03-14 16:25:59,951 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 16:25:59,951 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 16:25:59,951 INFO sqlalchemy.engine.Engine [cached since 206.4s ago] (29.081249210570306, 40.90868832498596, 29.114980443785377, 40.95621835009965)
+INFO:     127.0.0.1:58008 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 16:25:59,964 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:58008 - "GET /api/v1/weather/weather?lat=40.932885623104255&lon=29.102263282056207 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58026 - "GET /api/v1/weather/wind-grid?min_lat=40.90907752265805&max_lat=40.95660726788009&min_lon=29.091405773145958&max_lon=29.12513700636103&steps=5 HTTP/1.1" 200 OK
+2026-03-14 16:26:01,018 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 16:26:01,018 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 16:26:01,018 INFO sqlalchemy.engine.Engine [cached since 207.5s ago] (29.087343148256195, 40.92112749918171, 29.104208764863692, 40.944892311664944)
+INFO:     127.0.0.1:58026 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 16:26:01,029 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:58008 - "GET /api/v1/weather/weather?lat=40.9324533375428&lon=29.09811482717784 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58026 - "GET /api/v1/weather/wind-grid?min_lat=40.90912076604255&max_lat=40.95665048016596&min_lon=29.085397665448667&max_lon=29.119128898663746&steps=5 HTTP/1.1" 200 OK
+2026-03-14 16:26:01,874 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 16:26:01,874 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 16:26:01,874 INFO sqlalchemy.engine.Engine [cached since 208.3s ago] (29.081621141143764, 40.92112749918171, 29.098486757751303, 40.944892311664944)
+INFO:     127.0.0.1:58008 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 16:26:01,877 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:58008 - "GET /api/v1/weather/wind-grid?min_lat=40.90868832498596&max_lat=40.95621835009965&min_lon=29.081249210570306&max_lon=29.114980443785377&steps=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58026 - "GET /api/v1/weather/weather?lat=40.933009905423326&lon=29.095775956559944 HTTP/1.1" 200 OK
+2026-03-14 16:26:02,772 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 16:26:02,773 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 16:26:02,773 INFO sqlalchemy.engine.Engine [cached since 209.2s ago] (29.086577829974786, 40.928033316007856, 29.095010638278595, 40.93991554878997)
+INFO:     127.0.0.1:58008 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 16:26:02,787 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:58008 - "GET /api/v1/weather/weather?lat=40.933009905423326&lon=29.090053949447533 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58026 - "GET /api/v1/weather/wind-grid?min_lat=40.92112749918171&max_lat=40.944892311664944&min_lon=29.087343148256195&max_lon=29.104208764863692&steps=5 HTTP/1.1" 200 OK
+2026-03-14 16:26:03,844 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 16:26:03,844 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 16:26:03,844 INFO sqlalchemy.engine.Engine [cached since 210.3s ago] (29.08527607352527, 40.92840078414172, 29.09370888182908, 40.940282950837805)
+INFO:     127.0.0.1:58026 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 16:26:03,851 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:58026 - "GET /api/v1/weather/wind-grid?min_lat=40.92112749918171&max_lat=40.944892311664944&min_lon=29.081621141143764&max_lon=29.098486757751303&steps=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58026 - "GET /api/v1/weather/wind-grid?min_lat=40.928033316007856&max_lat=40.93991554878997&min_lon=29.086577829974786&max_lon=29.095010638278595&steps=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58040 - "GET /api/v1/weather/weather?lat=40.93434186748976&lon=29.089492477677176 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58008 - "GET /api/v1/weather/weather?lat=40.93397443239891&lon=29.09079423412669 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58008 - "GET /api/v1/weather/wind-grid?min_lat=40.92840078414172&max_lat=40.940282950837805&min_lon=29.08527607352527&max_lon=29.09370888182908&steps=5 HTTP/1.1" 200 OK
+2026-03-14 16:26:16,548 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 16:26:16,549 INFO sqlalchemy.engine.Engine SELECT users.name, users.surname, users.email, users.nickname, users.password, users.city, users.district, users.id, users.created_at, users.updated_at 
+FROM users 
+WHERE users.id = $1::INTEGER
+2026-03-14 16:26:16,549 INFO sqlalchemy.engine.Engine [cached since 218.2s ago] (2,)
+2026-03-14 16:26:16,550 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 16:26:16,550 INFO sqlalchemy.engine.Engine SELECT users.name, users.surname, users.email, users.nickname, users.password, users.city, users.district, users.id, users.created_at, users.updated_at 
+FROM users 
+WHERE users.id = $1::INTEGER
+2026-03-14 16:26:16,550 INFO sqlalchemy.engine.Engine [cached since 218.2s ago] (2,)
+2026-03-14 16:26:16,550 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 16:26:16,550 INFO sqlalchemy.engine.Engine SELECT fish_types.slug, fish_types.name, fish_types.icon_url, fish_types.color, fish_types.description, fish_types.id, fish_types.created_at, fish_types.updated_at 
+FROM fish_types ORDER BY fish_types.name
+2026-03-14 16:26:16,550 INFO sqlalchemy.engine.Engine [cached since 223.1s ago] ()
+INFO:     127.0.0.1:58050 - "GET /api/v1/fish/ HTTP/1.1" 200 OK
+2026-03-14 16:26:16,555 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:58048 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+2026-03-14 16:26:16,556 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-03-14 16:26:16,558 INFO sqlalchemy.engine.Engine SELECT fish_reports.user_id, fish_reports.fish_type_id, fish_reports.note, ST_AsEWKB(fish_reports.geom) AS geom, fish_reports.latitude, fish_reports.longitude, fish_reports.wind_speed, fish_reports.wind_deg, fish_reports.wind_name, fish_reports.temperature, fish_reports.id, fish_reports.created_at, fish_reports.updated_at 
+FROM fish_reports 
+WHERE fish_reports.user_id = $1::INTEGER ORDER BY fish_reports.created_at DESC
+2026-03-14 16:26:16,558 INFO sqlalchemy.engine.Engine [cached since 218.1s ago] (2,)
+INFO:     127.0.0.1:58049 - "GET /api/v1/reports/me HTTP/1.1" 200 OK
+2026-03-14 16:26:16,564 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-03-14 16:26:21,504 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 16:26:21,504 INFO sqlalchemy.engine.Engine 
+        SELECT EXISTS (
+            SELECT 1 
+            FROM sea_areas 
+            WHERE ST_Intersects(
+                geom, 
+                ST_SetSRID(ST_MakePoint($1, $2), 4326)
+            )
+        )
+    
+2026-03-14 16:26:21,504 INFO sqlalchemy.engine.Engine [cached since 159.4s ago] (29.08930293596611, 40.934749826160655)
+INFO:     127.0.0.1:58048 - "POST /api/v1/spatial/validate-location HTTP/1.1" 200 OK
+2026-03-14 16:26:21,734 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-03-14 16:26:29,095 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 16:26:29,097 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 16:26:29,097 INFO sqlalchemy.engine.Engine [cached since 235.5s ago] (29.086824591660243, 40.931653667768316, 29.091040995812147, 40.93759472572866)
+INFO:     127.0.0.1:58057 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 16:26:29,103 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:58057 - "GET /api/v1/weather/weather?lat=40.93462419674849&lon=29.088932793736195 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58057 - "GET /api/v1/weather/wind-grid?min_lat=40.931653667768316&max_lat=40.93759472572866&min_lon=29.086824591660243&max_lon=29.091040995812147&steps=5 HTTP/1.1" 200 OK
+2026-03-14 20:52:07,069 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 20:52:07,070 INFO sqlalchemy.engine.Engine SELECT fish_types.slug, fish_types.name, fish_types.icon_url, fish_types.color, fish_types.description, fish_types.id, fish_types.created_at, fish_types.updated_at 
+FROM fish_types ORDER BY fish_types.name
+2026-03-14 20:52:07,070 INFO sqlalchemy.engine.Engine [cached since 1.617e+04s ago] ()
+INFO:     127.0.0.1:59490 - "GET /api/v1/auth/me HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59491 - "GET /api/v1/reports/me HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59492 - "GET /api/v1/fish/ HTTP/1.1" 200 OK
+2026-03-14 20:52:07,080 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-03-14 20:52:54,554 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 20:52:54,554 INFO sqlalchemy.engine.Engine SELECT users.name, users.surname, users.email, users.nickname, users.password, users.city, users.district, users.id, users.created_at, users.updated_at 
+FROM users 
+WHERE users.nickname = $1::VARCHAR
+2026-03-14 20:52:54,554 INFO sqlalchemy.engine.Engine [cached since 1.624e+04s ago] ('deneme_kaptan',)
+INFO:     127.0.0.1:59513 - "POST /api/v1/auth/login HTTP/1.1" 200 OK
+2026-03-14 20:52:54,590 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-03-14 20:52:54,670 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 20:52:54,671 INFO sqlalchemy.engine.Engine SELECT fish_types.slug, fish_types.name, fish_types.icon_url, fish_types.color, fish_types.description, fish_types.id, fish_types.created_at, fish_types.updated_at 
+FROM fish_types ORDER BY fish_types.name
+2026-03-14 20:52:54,671 INFO sqlalchemy.engine.Engine [cached since 1.622e+04s ago] ()
+INFO:     127.0.0.1:59513 - "GET /api/v1/fish/ HTTP/1.1" 200 OK
+2026-03-14 20:52:54,687 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-03-14 20:52:54,808 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 20:52:54,808 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 20:52:54,809 INFO sqlalchemy.engine.Engine [cached since 1.622e+04s ago] (29.777659000000043, 40.715438256118844, 29.787659000000026, 40.72957374388115)
+INFO:     127.0.0.1:59513 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 20:52:54,813 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:59513 - "GET /api/v1/weather/weather?lat=40.722505999999996&lon=29.782659000000034 HTTP/1.1" 200 OK
+2026-03-14 20:52:56,515 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 20:52:56,516 INFO sqlalchemy.engine.Engine SELECT users.name, users.surname, users.email, users.nickname, users.password, users.city, users.district, users.id, users.created_at, users.updated_at 
+FROM users 
+WHERE users.id = $1::INTEGER
+2026-03-14 20:52:56,517 INFO sqlalchemy.engine.Engine [cached since 1.622e+04s ago] (2,)
+2026-03-14 20:52:56,524 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 20:52:56,527 INFO sqlalchemy.engine.Engine SELECT users.name, users.surname, users.email, users.nickname, users.password, users.city, users.district, users.id, users.created_at, users.updated_at 
+FROM users 
+WHERE users.id = $1::INTEGER
+2026-03-14 20:52:56,527 INFO sqlalchemy.engine.Engine [cached since 1.622e+04s ago] (2,)
+INFO:     127.0.0.1:59513 - "GET /api/v1/auth/me HTTP/1.1" 200 OK
+2026-03-14 20:52:56,528 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-03-14 20:52:56,528 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 20:52:56,528 INFO sqlalchemy.engine.Engine SELECT fish_types.slug, fish_types.name, fish_types.icon_url, fish_types.color, fish_types.description, fish_types.id, fish_types.created_at, fish_types.updated_at 
+FROM fish_types ORDER BY fish_types.name
+2026-03-14 20:52:56,528 INFO sqlalchemy.engine.Engine [cached since 1.622e+04s ago] ()
+INFO:     127.0.0.1:59523 - "GET /api/v1/fish/ HTTP/1.1" 200 OK
+2026-03-14 20:52:56,532 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-03-14 20:52:56,533 INFO sqlalchemy.engine.Engine SELECT fish_reports.user_id, fish_reports.fish_type_id, fish_reports.note, ST_AsEWKB(fish_reports.geom) AS geom, fish_reports.latitude, fish_reports.longitude, fish_reports.wind_speed, fish_reports.wind_deg, fish_reports.wind_name, fish_reports.temperature, fish_reports.id, fish_reports.created_at, fish_reports.updated_at 
+FROM fish_reports 
+WHERE fish_reports.user_id = $1::INTEGER ORDER BY fish_reports.created_at DESC
+2026-03-14 20:52:56,533 INFO sqlalchemy.engine.Engine [cached since 1.622e+04s ago] (2,)
+INFO:     127.0.0.1:59522 - "GET /api/v1/reports/me HTTP/1.1" 200 OK
+2026-03-14 20:52:56,543 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:59513 - "GET /api/v1/weather/wind-grid?min_lat=40.715438256118844&max_lat=40.72957374388115&min_lon=29.777659000000043&max_lon=29.787659000000026&steps=5 HTTP/1.1" 200 OK
+2026-03-14 20:53:27,557 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 20:53:27,558 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 20:53:27,558 INFO sqlalchemy.engine.Engine [cached since 1.625e+04s ago] (29.777794708097943, 40.71667900791311, 29.787794708097884, 40.73081423219735)
+INFO:     127.0.0.1:59529 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 20:53:27,568 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:59529 - "GET /api/v1/weather/weather?lat=40.72374662005523&lon=29.782794708097914 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59529 - "GET /api/v1/weather/wind-grid?min_lat=40.71667900791311&max_lat=40.73081423219735&min_lon=29.777794708097943&max_lon=29.787794708097884&steps=5 HTTP/1.1" 200 OK
+2026-03-14 20:55:05,177 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 20:55:05,177 INFO sqlalchemy.engine.Engine SELECT fish_types.slug, fish_types.name, fish_types.icon_url, fish_types.color, fish_types.description, fish_types.id, fish_types.created_at, fish_types.updated_at 
+FROM fish_types ORDER BY fish_types.name
+2026-03-14 20:55:05,177 INFO sqlalchemy.engine.Engine [cached since 1.635e+04s ago] ()
+INFO:     127.0.0.1:59569 - "GET /api/v1/fish/ HTTP/1.1" 200 OK
+2026-03-14 20:55:05,180 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-03-14 20:58:24,118 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 20:58:24,119 INFO sqlalchemy.engine.Engine SELECT fish_types.slug, fish_types.name, fish_types.icon_url, fish_types.color, fish_types.description, fish_types.id, fish_types.created_at, fish_types.updated_at 
+FROM fish_types ORDER BY fish_types.name
+2026-03-14 20:58:24,119 INFO sqlalchemy.engine.Engine [cached since 1.655e+04s ago] ()
+INFO:     127.0.0.1:59655 - "GET /api/v1/fish/ HTTP/1.1" 200 OK
+2026-03-14 20:58:24,132 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-03-14 20:59:53,317 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 20:59:53,317 INFO sqlalchemy.engine.Engine SELECT fish_types.slug, fish_types.name, fish_types.icon_url, fish_types.color, fish_types.description, fish_types.id, fish_types.created_at, fish_types.updated_at 
+FROM fish_types ORDER BY fish_types.name
+2026-03-14 20:59:53,317 INFO sqlalchemy.engine.Engine [cached since 1.664e+04s ago] ()
+INFO:     127.0.0.1:59665 - "GET /api/v1/fish/ HTTP/1.1" 200 OK
+2026-03-14 20:59:53,331 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-03-14 21:02:18,157 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 21:02:18,157 INFO sqlalchemy.engine.Engine SELECT fish_types.slug, fish_types.name, fish_types.icon_url, fish_types.color, fish_types.description, fish_types.id, fish_types.created_at, fish_types.updated_at 
+FROM fish_types ORDER BY fish_types.name
+2026-03-14 21:02:18,157 INFO sqlalchemy.engine.Engine [cached since 1.678e+04s ago] ()
+INFO:     127.0.0.1:59683 - "GET /api/v1/fish/ HTTP/1.1" 200 OK
+2026-03-14 21:02:18,163 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-03-14 21:02:26,404 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 21:02:26,405 INFO sqlalchemy.engine.Engine 
+        SELECT EXISTS (
+            SELECT 1 
+            FROM sea_areas 
+            WHERE ST_Intersects(
+                geom, 
+                ST_SetSRID(ST_MakePoint($1, $2), 4326)
+            )
+        )
+    
+2026-03-14 21:02:26,405 INFO sqlalchemy.engine.Engine [cached since 1.672e+04s ago] (29.78134008540699, 40.72730443618795)
+INFO:     127.0.0.1:59692 - "POST /api/v1/spatial/validate-location HTTP/1.1" 200 OK
+2026-03-14 21:02:26,656 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-03-14 21:02:33,867 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 21:02:33,867 INFO sqlalchemy.engine.Engine SELECT fish_types.slug, fish_types.name, fish_types.icon_url, fish_types.color, fish_types.description, fish_types.id, fish_types.created_at, fish_types.updated_at 
+FROM fish_types ORDER BY fish_types.name
+2026-03-14 21:02:33,867 INFO sqlalchemy.engine.Engine [cached since 1.68e+04s ago] ()
+INFO:     127.0.0.1:59708 - "GET /api/v1/fish/ HTTP/1.1" 200 OK
+2026-03-14 21:02:33,876 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-03-14 21:02:48,705 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 21:02:48,705 INFO sqlalchemy.engine.Engine SELECT users.name, users.surname, users.email, users.nickname, users.password, users.city, users.district, users.id, users.created_at, users.updated_at 
+FROM users 
+WHERE users.id = $1::INTEGER
+2026-03-14 21:02:48,705 INFO sqlalchemy.engine.Engine [cached since 1.681e+04s ago] (2,)
+2026-03-14 21:02:48,712 INFO sqlalchemy.engine.Engine 
+        SELECT EXISTS (
+            SELECT 1 FROM sea_areas 
+            WHERE ST_DWithin(geom, ST_SetSRID(ST_MakePoint($1, $2), 4326), 0.002)
+        )
+    
+2026-03-14 21:02:48,712 INFO sqlalchemy.engine.Engine [cached since 1.674e+04s ago] (29.78134008540699, 40.72730443618795)
+2026-03-14 21:02:49,150 INFO sqlalchemy.engine.Engine INSERT INTO fish_reports (user_id, fish_type_id, note, geom, latitude, longitude, wind_speed, wind_deg, wind_name, temperature, created_at, updated_at) VALUES ($1::INTEGER, $2::VARCHAR, $3::VARCHAR, ST_GeomFromEWKT($4), $5::FLOAT, $6::FLOAT, $7::FLOAT, $8::FLOAT, $9::VARCHAR, $10::FLOAT, now(), now()) RETURNING fish_reports.id, fish_reports.created_at, fish_reports.updated_at
+2026-03-14 21:02:49,150 INFO sqlalchemy.engine.Engine [cached since 1.674e+04s ago] (2, 'istavrit', '', 'SRID=4326;POINT(29.78134008540699 40.72730443618795)', 40.72730443618795, 29.78134008540699, 2.33, 65, 'Poyraz (KD)', 8.2)
+2026-03-14 21:02:49,191 INFO sqlalchemy.engine.Engine COMMIT
+2026-03-14 21:02:49,196 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 21:02:49,196 INFO sqlalchemy.engine.Engine SELECT fish_reports.user_id, fish_reports.fish_type_id, fish_reports.note, ST_AsEWKB(fish_reports.geom) AS geom, fish_reports.latitude, fish_reports.longitude, fish_reports.wind_speed, fish_reports.wind_deg, fish_reports.wind_name, fish_reports.temperature, fish_reports.id, fish_reports.created_at, fish_reports.updated_at 
+FROM fish_reports 
+WHERE fish_reports.id = $1::INTEGER
+2026-03-14 21:02:49,196 INFO sqlalchemy.engine.Engine [cached since 1.674e+04s ago] (1121,)
+INFO:     127.0.0.1:59714 - "POST /api/v1/reports/ HTTP/1.1" 200 OK
+2026-03-14 21:02:49,205 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-03-14 21:02:51,771 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 21:02:51,771 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 21:02:51,771 INFO sqlalchemy.engine.Engine [cached since 1.682e+04s ago] (29.780924422931193, 40.72142654909439, 29.785140827083097, 40.72738647184174)
+INFO:     127.0.0.1:59714 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 21:02:51,777 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-03-14 21:02:52,773 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 21:02:52,774 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 21:02:52,774 INFO sqlalchemy.engine.Engine [cached since 1.682e+04s ago] (29.780466662290124, 40.7226516427736, 29.784683066442064, 40.728611455818964)
+INFO:     127.0.0.1:59714 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 21:02:52,779 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:59714 - "GET /api/v1/weather/weather?lat=40.724406510468064&lon=29.783032625007145 HTTP/1.1" 200 OK
+2026-03-14 21:02:53,871 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 21:02:53,872 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 21:02:53,872 INFO sqlalchemy.engine.Engine [cached since 1.682e+04s ago] (29.781383779939, 40.72557997730669, 29.782789267876232, 40.7275665816531)
+INFO:     127.0.0.1:59723 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 21:02:53,877 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:59722 - "GET /api/v1/weather/wind-grid?min_lat=40.72142654909439&max_lat=40.72738647184174&min_lon=29.780924422931193&max_lon=29.785140827083097&steps=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59714 - "GET /api/v1/weather/weather?lat=40.72563154929628&lon=29.782574864366094 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59722 - "GET /api/v1/weather/wind-grid?min_lat=40.7226516427736&max_lat=40.728611455818964&min_lon=29.780466662290124&max_lon=29.784683066442064&steps=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59714 - "GET /api/v1/weather/wind-grid?min_lat=40.72557997730669&max_lat=40.7275665816531&min_lon=29.781383779939&max_lon=29.782789267876232&steps=5 HTTP/1.1" 200 OK
+2026-03-14 21:02:56,299 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 21:02:56,299 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 21:02:56,299 INFO sqlalchemy.engine.Engine [cached since 1.682e+04s ago] (29.781475571790228, 40.72528545973174, 29.782881059727462, 40.72727207286974)
+INFO:     127.0.0.1:59714 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 21:02:56,309 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:59714 - "GET /api/v1/weather/weather?lat=40.72627876630074&lon=29.782178315758845 HTTP/1.1" 200 OK
+2026-03-14 21:02:58,527 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 21:02:58,527 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 21:02:58,527 INFO sqlalchemy.engine.Engine [cached since 1.682e+04s ago] (29.78112421474185, 40.72478950506662, 29.783232416817768, 40.72776938257959)
+INFO:     127.0.0.1:59722 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 21:02:58,533 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:59714 - "GET /api/v1/weather/wind-grid?min_lat=40.72528545973174&max_lat=40.72727207286974&min_lon=29.781475571790228&max_lon=29.782881059727462&steps=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59723 - "GET /api/v1/weather/weather?lat=40.726573279479894&lon=29.782086523907616 HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/httpx/_transports/default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/httpx/_transports/default.py", line 394, in handle_async_request
+    resp = await self._pool.handle_async_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/httpcore/_async/connection_pool.py", line 256, in handle_async_request
+    raise exc from None
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/httpcore/_async/connection_pool.py", line 236, in handle_async_request
+    response = await connection.handle_async_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/httpcore/_async/connection.py", line 101, in handle_async_request
+    raise exc
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/httpcore/_async/connection.py", line 78, in handle_async_request
+    stream = await self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/httpcore/_async/connection.py", line 156, in _connect
+    stream = await stream.start_tls(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/httpcore/_backends/anyio.py", line 67, in start_tls
+    with map_exceptions(exc_map):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/httpcore/_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectTimeout
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/uvicorn/protocols/http/httptools_impl.py", line 416, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/fastapi/applications.py", line 1135, in __call__
+    await super().__call__(scope, receive, send)
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/starlette/applications.py", line 107, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/starlette/middleware/errors.py", line 186, in __call__
+    raise exc
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/starlette/middleware/cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/fastapi/routing.py", line 115, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/fastapi/routing.py", line 101, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/fastapi/routing.py", line 355, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/fastapi/routing.py", line 243, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/koray/Documents/NAVI_MARINE/navi_marine_backend/api/v1/weather.py", line 24, in get_weather
+    weather = await get_marine_weather(lat, lon)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/koray/Documents/NAVI_MARINE/navi_marine_backend/services/weather.py", line 57, in get_marine_weather
+    response = await client.get(url, params=params)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/httpx/_client.py", line 1768, in get
+    return await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/httpx/_client.py", line 1540, in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/httpx/_client.py", line 1629, in send
+    response = await self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/httpx/_client.py", line 1657, in _send_handling_auth
+    response = await self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/httpx/_client.py", line 1694, in _send_handling_redirects
+    response = await self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/httpx/_client.py", line 1730, in _send_single_request
+    response = await transport.handle_async_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/httpx/_transports/default.py", line 393, in handle_async_request
+    with map_httpcore_exceptions():
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/httpx/_transports/default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectTimeout
+INFO:     127.0.0.1:59722 - "GET /api/v1/weather/wind-grid?min_lat=40.72478950506662&max_lat=40.72776938257959&min_lon=29.78112421474185&max_lon=29.783232416817768&steps=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59714 - "GET /api/v1/weather/weather?lat=40.7262794438231&lon=29.78217831577981 HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/httpx/_transports/default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/httpx/_transports/default.py", line 394, in handle_async_request
+    resp = await self._pool.handle_async_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/httpcore/_async/connection_pool.py", line 256, in handle_async_request
+    raise exc from None
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/httpcore/_async/connection_pool.py", line 236, in handle_async_request
+    response = await connection.handle_async_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/httpcore/_async/connection.py", line 101, in handle_async_request
+    raise exc
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/httpcore/_async/connection.py", line 78, in handle_async_request
+    stream = await self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/httpcore/_async/connection.py", line 156, in _connect
+    stream = await stream.start_tls(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/httpcore/_backends/anyio.py", line 67, in start_tls
+    with map_exceptions(exc_map):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/httpcore/_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectTimeout
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/uvicorn/protocols/http/httptools_impl.py", line 416, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/fastapi/applications.py", line 1135, in __call__
+    await super().__call__(scope, receive, send)
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/starlette/applications.py", line 107, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/starlette/middleware/errors.py", line 186, in __call__
+    raise exc
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/starlette/middleware/cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/fastapi/routing.py", line 115, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/fastapi/routing.py", line 101, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/fastapi/routing.py", line 355, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/fastapi/routing.py", line 243, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/koray/Documents/NAVI_MARINE/navi_marine_backend/api/v1/weather.py", line 24, in get_weather
+    weather = await get_marine_weather(lat, lon)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/koray/Documents/NAVI_MARINE/navi_marine_backend/services/weather.py", line 57, in get_marine_weather
+    response = await client.get(url, params=params)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/httpx/_client.py", line 1768, in get
+    return await self.request(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/httpx/_client.py", line 1540, in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/httpx/_client.py", line 1629, in send
+    response = await self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/httpx/_client.py", line 1657, in _send_handling_auth
+    response = await self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/httpx/_client.py", line 1694, in _send_handling_redirects
+    response = await self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/httpx/_client.py", line 1730, in _send_single_request
+    response = await transport.handle_async_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/httpx/_transports/default.py", line 393, in handle_async_request
+    with map_httpcore_exceptions():
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/httpx/_transports/default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectTimeout
+2026-03-14 21:03:09,445 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 21:03:09,445 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 21:03:09,445 INFO sqlalchemy.engine.Engine [cached since 1.684e+04s ago] (29.78173515534393, 40.72607663322813, 29.7824378924713, 40.72706992573154)
+INFO:     127.0.0.1:59738 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 21:03:09,450 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:59738 - "GET /api/v1/weather/weather?lat=40.72657327947984&lon=29.782086523907616 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59738 - "GET /api/v1/weather/wind-grid?min_lat=40.72607663322813&max_lat=40.72706992573154&min_lon=29.78173515534393&max_lon=29.7824378924713&steps=5 HTTP/1.1" 200 OK
+2026-03-14 21:03:22,467 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 21:03:22,468 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 21:03:22,468 INFO sqlalchemy.engine.Engine [cached since 1.685e+04s ago] (29.781559473399113, 40.72582865216091, 29.782613574437086, 40.72731858433142)
+INFO:     127.0.0.1:59742 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 21:03:22,480 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-03-14 21:03:23,648 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 21:03:23,648 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 21:03:23,648 INFO sqlalchemy.engine.Engine [cached since 1.685e+04s ago] (29.781032422911473, 40.725084702406335, 29.783140624987425, 40.7280645667018)
+INFO:     127.0.0.1:59744 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 21:03:23,652 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:59742 - "GET /api/v1/weather/weather?lat=40.726573618246164&lon=29.7820865239181 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59742 - "GET /api/v1/weather/wind-grid?min_lat=40.72582865216091&max_lat=40.72731858433142&min_lon=29.781559473399113&max_lon=29.782613574437086&steps=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59744 - "GET /api/v1/weather/weather?lat=40.72657463455407&lon=29.78208652394945 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59742 - "GET /api/v1/weather/wind-grid?min_lat=40.725084702406335&max_lat=40.7280645667018&min_lon=29.781032422911473&max_lon=29.783140624987425&steps=5 HTTP/1.1" 200 OK
+2026-03-14 21:03:27,624 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 21:03:27,624 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 21:03:27,624 INFO sqlalchemy.engine.Engine [cached since 1.685e+04s ago] (29.77997832193627, 40.723596802965396, 29.784194726088216, 40.729556531373795)
+INFO:     127.0.0.1:59742 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 21:03:27,638 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:59742 - "GET /api/v1/weather/weather?lat=40.726576667169596&lon=29.782086524012243 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59742 - "GET /api/v1/weather/wind-grid?min_lat=40.723596802965396&max_lat=40.729556531373795&min_lon=29.77997832193627&max_lon=29.784194726088216&steps=5 HTTP/1.1" 200 OK
+2026-03-14 21:03:32,237 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 21:03:32,237 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 21:03:32,237 INFO sqlalchemy.engine.Engine [cached since 1.686e+04s ago] (29.7794204262215, 40.72402503230339, 29.783636830373446, 40.72998472236429)
+INFO:     127.0.0.1:59742 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 21:03:32,243 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-03-14 21:03:33,056 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 21:03:33,056 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 21:03:33,056 INFO sqlalchemy.engine.Engine [cached since 1.686e+04s ago] (29.777312224271366, 40.72104925284408, 29.785745032575175, 40.73296863223355)
+INFO:     127.0.0.1:59742 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 21:03:33,065 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:59742 - "GET /api/v1/weather/weather?lat=40.72700487733384&lon=29.781528628297472 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59742 - "GET /api/v1/weather/weather?lat=40.727008942538816&lon=29.78152862842327 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59752 - "GET /api/v1/weather/wind-grid?min_lat=40.72402503230339&max_lat=40.72998472236429&min_lon=29.7794204262215&max_lon=29.783636830373446&steps=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59742 - "GET /api/v1/weather/wind-grid?min_lat=40.72104925284408&max_lat=40.73296863223355&min_lon=29.777312224271366&max_lon=29.785745032575175&steps=5 HTTP/1.1" 200 OK
+2026-03-14 21:03:39,571 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 21:03:39,572 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 21:03:39,572 INFO sqlalchemy.engine.Engine [cached since 1.687e+04s ago] (29.780681055856952, 40.72458670324242, 29.78349199195828, 40.72855985571725)
+INFO:     127.0.0.1:59742 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 21:03:39,577 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:59742 - "GET /api/v1/weather/weather?lat=40.72657327947984&lon=29.782086523907616 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59742 - "GET /api/v1/weather/wind-grid?min_lat=40.72458670324242&max_lat=40.72855985571725&min_lon=29.780681055856952&max_lon=29.78349199195828&steps=5 HTTP/1.1" 200 OK
+2026-03-14 21:03:58,658 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 21:03:58,660 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 21:03:58,661 INFO sqlalchemy.engine.Engine [cached since 1.689e+04s ago] (29.170599597745785, 40.95875921073633, 29.180599597745726, 40.972842901810125)
+INFO:     127.0.0.1:59760 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 21:03:58,667 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-03-14 21:03:59,590 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 21:03:59,593 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 21:03:59,593 INFO sqlalchemy.engine.Engine [cached since 1.689e+04s ago] (29.167092990484697, 40.94316099922743, 29.17709299048464, 40.957248018380795)
+INFO:     127.0.0.1:59760 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 21:03:59,607 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:59760 - "GET /api/v1/weather/weather?lat=40.96580105627323&lon=29.175599597745755 HTTP/1.1" 200 OK
+2026-03-14 21:04:00,504 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 21:04:00,504 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 21:04:00,504 INFO sqlalchemy.engine.Engine [cached since 1.689e+04s ago] (29.16452954174515, 40.918175949819684, 29.174529541745176, 40.932268297680565)
+INFO:     127.0.0.1:59760 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 21:04:00,517 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:59760 - "GET /api/v1/weather/weather?lat=40.95020450880411&lon=29.172092990484668 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59763 - "GET /api/v1/weather/wind-grid?min_lat=40.95875921073633&max_lat=40.972842901810125&min_lon=29.170599597745785&max_lon=29.180599597745726&steps=5 HTTP/1.1" 200 OK
+2026-03-14 21:04:01,507 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 21:04:01,507 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 21:04:01,507 INFO sqlalchemy.engine.Engine [cached since 1.689e+04s ago] (29.15904334523008, 40.90574075439718, 29.169043345230072, 40.91983575338647)
+INFO:     127.0.0.1:59760 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 21:04:01,521 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:59760 - "GET /api/v1/weather/weather?lat=40.925222123750125&lon=29.169529541745163 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59763 - "GET /api/v1/weather/wind-grid?min_lat=40.94316099922743&max_lat=40.957248018380795&min_lon=29.167092990484697&max_lon=29.17709299048464&steps=5 HTTP/1.1" 200 OK
+2026-03-14 21:04:02,526 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 21:04:02,526 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 21:04:02,526 INFO sqlalchemy.engine.Engine [cached since 1.689e+04s ago] (29.153055961699884, 40.88684386113168, 29.163055961699868, 40.900942887583966)
+INFO:     127.0.0.1:59760 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 21:04:02,533 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-03-14 21:04:02,837 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 21:04:02,837 INFO sqlalchemy.engine.Engine 
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)
+            LIMIT 200
+        
+2026-03-14 21:04:02,841 INFO sqlalchemy.engine.Engine [cached since 1.689e+04s ago] (29.150299388462045, 40.88526001723761, 29.16029938846203, 40.89935938118225)
+INFO:     127.0.0.1:59769 - "POST /api/v1/reports/nearby HTTP/1.1" 200 OK
+2026-03-14 21:04:02,855 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     127.0.0.1:59760 - "GET /api/v1/weather/wind-grid?min_lat=40.918175949819684&max_lat=40.932268297680565&min_lon=29.16452954174515&max_lon=29.174529541745176&steps=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59763 - "GET /api/v1/weather/weather?lat=40.912788253891826&lon=29.164043345230077 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59763 - "GET /api/v1/weather/weather?lat=40.89389337435782&lon=29.158055961699876 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59760 - "GET /api/v1/weather/wind-grid?min_lat=40.90574075439718&max_lat=40.91983575338647&min_lon=29.15904334523008&max_lon=29.169043345230072&steps=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59769 - "GET /api/v1/weather/weather?lat=40.89230969920993&lon=29.155299388462037 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59760 - "GET /api/v1/weather/wind-grid?min_lat=40.88684386113168&max_lat=40.900942887583966&min_lon=29.153055961699884&max_lon=29.163055961699868&steps=5 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59760 - "GET /api/v1/weather/wind-grid?min_lat=40.88526001723761&max_lat=40.89935938118225&min_lon=29.150299388462045&max_lon=29.16029938846203&steps=5 HTTP/1.1" 200 OK
+2026-03-14 21:05:07,886 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 21:05:07,887 INFO sqlalchemy.engine.Engine SELECT fish_types.slug, fish_types.name, fish_types.icon_url, fish_types.color, fish_types.description, fish_types.id, fish_types.created_at, fish_types.updated_at 
+FROM fish_types ORDER BY fish_types.name
+2026-03-14 21:05:07,887 INFO sqlalchemy.engine.Engine [cached since 1.695e+04s ago] ()
+INFO:     127.0.0.1:59786 - "GET /api/v1/fish/ HTTP/1.1" 200 OK
+2026-03-14 21:05:07,893 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-03-14 21:06:20,042 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-14 21:06:20,042 INFO sqlalchemy.engine.Engine 
+        SELECT EXISTS (
+            SELECT 1 
+            FROM sea_areas 
+            WHERE ST_Intersects(
+                geom, 
+                ST_SetSRID(ST_MakePoint($1, $2), 4326)
+            )
+        )
+    
+2026-03-14 21:06:20,042 INFO sqlalchemy.engine.Engine [cached since 1.696e+04s ago] (29.154031364454166, 40.892742488703504)
+INFO:     127.0.0.1:59800 - "POST /api/v1/spatial/validate-location HTTP/1.1" 200 OK
+2026-03-14 21:06:20,276 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [54337]

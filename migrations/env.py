@@ -15,7 +15,9 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 # 1. Kendi modellerimizi ve Base'i import ediyoruz
 from database import Base, DATABASE_URL
 from models.spatial import SeaArea
-from models.reports import FishReport # Birazdan ekleyeceğimiz model
+from models.reports import FishReport
+from models.users import User
+from models.fish import FishType
 
 # Alembic Config objesi
 config = context.config

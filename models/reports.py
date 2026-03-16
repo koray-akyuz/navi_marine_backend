@@ -1,9 +1,14 @@
-from sqlalchemy import Column, String, Float, Text, ForeignKey
+from sqlalchemy import Column, String, Float, Text, ForeignKey, Integer
 from geoalchemy2 import Geometry
 from .base import AppBase
+from sqlalchemy.orm import relationship
 
 class FishReport(AppBase):
     __tablename__ = "fish_reports"
+
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    reporter = relationship("User")
+
 
     # Balık türü (Örn: 'levrek', 'cipura')
     fish_type_id = Column(String(50), nullable=False, index=True)

@@ -21,6 +21,7 @@ class FishReportResponse(FishReportCreate):
     wind_deg:     Optional[float]    = None
     wind_name:    Optional[str]      = None
     temperature:  Optional[float]    = None
+    reporter_nickname: Optional[str] = None
 
     class Config:
         from_attributes = True

@@ -6,11 +6,19 @@ from models.reports import FishReport
 from schemas.reports import FishReportCreate, FishReportResponse
 from schemas.spatial import MapBounds
 from services.weather import get_marine_weather
+from api.v1.deps import get_current_user
+from models.users import User
+from sqlalchemy.future import select
+from sqlalchemy.orm import joinedload
 
 router = APIRouter()
 
 @router.post("/", response_model=FishReportResponse)
-async def create_fish_report(report_in: FishReportCreate, db: AsyncSession = Depends(get_db)):
+async def create_fish_report(
+    report_in: FishReportCreate, 
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
     # 1. Lokasyon Doğrulaması (Buffer kullanarak)
     check_query = text("""
         SELECT EXISTS (
@@ -39,6 +47,7 @@ async def create_fish_report(report_in: FishReportCreate, db: AsyncSession = Dep
         wind_deg     = weather.get("wind_deg")    if weather else None,
         wind_name    = weather.get("wind_name")   if weather else None,
         temperature  = weather.get("temp")        if weather else None,
+        user_id      = current_user.id
     )
     
     db.add(new_report)
@@ -46,6 +55,23 @@ async def create_fish_report(report_in: FishReportCreate, db: AsyncSession = Dep
     await db.refresh(new_report)
     return new_report
 
+
+@router.get("/me", response_model=list[FishReportResponse])
+async def get_my_reports(
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Giriş yapmış kullanıcının kendi raporlarını getirir.
+    """
+    query = select(FishReport).where(FishReport.user_id == current_user.id).order_by(FishReport.created_at.desc())
+    result = await db.execute(query)
+    reports = result.scalars().all()
+    
+    for r in reports:
+        r.reporter_nickname = current_user.nickname
+        
+    return reports
 
 @router.post("/nearby", response_model=list[FishReportResponse])
 async def get_nearby_reports(bounds: MapBounds, db: AsyncSession = Depends(get_db)):
@@ -55,10 +81,12 @@ async def get_nearby_reports(bounds: MapBounds, db: AsyncSession = Depends(get_d
     """
     try:
         query = text("""
-            SELECT id, fish_type_id, latitude, longitude, note, created_at, updated_at,
-                   wind_speed, wind_deg, wind_name, temperature
-            FROM fish_reports
-            WHERE geom && ST_MakeEnvelope(:min_lon, :min_lat, :max_lon, :max_lat, 4326)
+            SELECT r.id, r.fish_type_id, r.latitude, r.longitude, r.note, r.created_at, r.updated_at,
+                   r.wind_speed, r.wind_deg, r.wind_name, r.temperature,
+                   u.nickname as reporter_nickname
+            FROM fish_reports r
+            LEFT JOIN users u ON r.user_id = u.id
+            WHERE r.geom && ST_MakeEnvelope(:min_lon, :min_lat, :max_lon, :max_lat, 4326)
             LIMIT 200
         """)
         result = await db.execute(query, {
@@ -77,7 +105,15 @@ async def get_report_detail(report_id: int, db: AsyncSession = Depends(get_db)):
     """
     Spesifik bir raporun detaylarını (hava durumu dahil) getirir.
     """
-    report = await db.get(FishReport, report_id)
+    query = select(FishReport).options(joinedload(FishReport.reporter)).where(FishReport.id == report_id)
+    result = await db.execute(query)
+    report = result.scalars().first()
+    
     if not report:
         raise HTTPException(status_code=404, detail="Rapor bulunamadı.")
+    
+    # reporter_nickname field'ını doldur (ResponseSchema için)
+    if report.reporter:
+        report.reporter_nickname = report.reporter.nickname
+        
     return report
